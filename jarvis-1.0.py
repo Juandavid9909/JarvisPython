@@ -13,6 +13,7 @@ import wolframalpha # pip install wolframalpha
 import json
 import requests
 from urllib.request import urlopen
+import time
 
 engine = pyttsx3.init()
 wolframalpha_app_id = "QK6X2W-8QLW97U5EH"
@@ -93,7 +94,7 @@ def sendEmail(to, content):
     server.starttls()
 
     # fot his function, you must enable low security in you gmail with you are going to use as sender
-    server.login("cursosubidos2@gmail.com", "Juanda015")
+    server.login("cursosubidos2@gmail.com", "")
     server.sendmail("cursosubidos2@gmail.com", to, content)
     server.close()
 
@@ -116,7 +117,7 @@ def joke():
     speak(pyjokes.get_joke(language = "es", category = "all"))
 
 if __name__ == "__main__":
-    #wishme()
+    wishme()
 
     while True:
         query = TakeCommand().lower()
@@ -144,7 +145,7 @@ if __name__ == "__main__":
 
                 #provide reciever email address
                 speak("A quien debo enviar el mensaje?")
-                reciever = "juandavid918@gmail.com"
+                reciever = input("Ingrese el email del destinatario: ")
                 to = reciever
                 sendEmail(to, content)
                 speak(content)
@@ -225,7 +226,7 @@ if __name__ == "__main__":
             if "número" in ans:
                 num = int(ans.replace("número", ""))
             elif "aleatorio" in ans or "elige tú" in ans:
-                num = random.randint(1, 100)
+                num = random.randint(1, 53)
             os.startfile(os.path.join(songs_dir, music[num]))
                 
 
@@ -266,8 +267,41 @@ if __name__ == "__main__":
 
         elif "calcular" in query:
             client = wolframalpha.Client(wolframalpha_app_id)
-            indx = query.lower().split().index("calculate")
+            indx = query.lower().split().index("calcular")
             query = query.split()[indx + 1:]
             res = client.query("".join(query))
             answer = next(res.results).text
             speak("La respuesta es " + answer)
+
+        elif "qué es" in query or "quién es" in query:
+            # use the same API key that we generated earlier i.e. wolframalpha
+            client = wolframalpha.Client(wolframalpha_app_id)
+
+            if "qué es" in query:
+                query = query.replace("qué es", "what is")
+            elif "quién es" in query:
+                query = query.replace("quién es", "who is")
+
+            res = client.query(query)
+
+            try:
+                print(next(res.results).text)
+                speak(next(res.results).text)
+
+            except StopIteration:
+                speak("No se encontraron resultados")
+        
+        elif "parar de escuchar" in query:
+            speak("Por cuantos segundos quieres que deje de escuchar tus comandos?")
+            ans = int(TakeCommand())
+            time.sleep(ans)
+            print(ans)
+
+        elif "cerrar sesión" in query:
+            os.system("shutdown -l")
+
+        elif "reiniciar" in query:
+            os.system("shutdown /r /t 1")
+
+        elif "apagar" in query:
+            os.system("shutdown /s /t 1")

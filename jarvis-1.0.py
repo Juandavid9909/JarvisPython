@@ -116,6 +116,21 @@ def cpu():
 def joke():
     speak(pyjokes.get_joke(language = "es", category = "all"))
 
+def Introduction():
+    speak("Yo soy Jarvis, un asistente personal, "
+    "Fui creado por Juan, "
+    "Puedo ayudarte en varios aspectos, "
+    "puedo buscar cosas por ti en internet, "
+    "tambien puedo obtener definiciones de wikipedia , "
+    "En terminos simples puedo hacer tu vida un lecho de rosas, "
+    "Donde solo debes decirme que hacer y lo hare por ti")
+
+def Creator():
+    speak("Juan es una persona extraordinaria ,"
+    "El tiene una pasion por la inteligencia artificial y programacion en general,"
+    "es muy cooperativo,"
+    "Si tienes algun problema con Jarvis el estara encantado de ayudarle")
+
 if __name__ == "__main__":
     wishme()
 
@@ -305,3 +320,62 @@ if __name__ == "__main__":
 
         elif "apagar" in query:
             os.system("shutdown /s /t 1")
+
+        # most asked question from google Assistant
+        elif "serías mi novia" in query or "serías mi novio" in query:
+            speak("No lo se, tal vez necesite algo de tiempo")
+            
+        elif "te amo" in query or "te quiero" in query:
+            speak("Es dificil de decir esto viniendo de una computadora pero yo tambien")
+
+        elif 'háblame de ti' in query or 'quién eres' in query:
+            Introduction()
+
+        elif 'habla sobre nosotros' in query or 'creador' in query:
+            Creator()
+
+        elif "clima" in query:
+			# Google Open weather website 
+			# to get API of Open weather
+            api_key = "c2944304c2c80f63f3c0d91bffabad6c"
+            base_url = "http://api.openweathermap.org/data/2.5/weather?q="
+            speak("Nombre de la ciudad")
+            print("Nombre de la ciudad: ")
+            city_name = TakeCommand()
+            complete_url = base_url + "appid =" + api_key + "&q =" + city_name
+            response = requests.get(complete_url)
+            x = response.json()
+            
+            if x["cod"] != "404":
+                y = x["main"]
+                current_temperature = y["temp"]
+                current_pressure = y["pressure"]
+                current_humidiy = y["humidity"]
+                z = x["weather"]
+                weather_description = z[0]["description"]
+                print(" Temperature (in kelvin unit) = " +str(current_temperature)+"\n atmospheric pressure (in hPa unit) ="+str(current_pressure) +"\n humidity (in percentage) = " +str(current_humidiy) +"\n description = " +str(weather_description))
+                
+            else:
+                speak(" City Not Found ") 
+
+        elif 'qué es el amor' in query or 'habla sobre el amor' in query:
+            speak("Es el septimo sentido que destruye todos los demas sentidos "
+            "y creo que es una ilusion, "
+            "y una perdida de tiempo")
+
+        elif "quién soy" in query:
+            speak("Si puedes hablar, eres definitivamente un humano")
+
+        elif "viniste a este mundo" in query:
+            speak("Gracias a Juan, ademas es un secreto")
+
+        elif 'cómo estás' in query:
+            speak("Estoy bien, gracias por preguntar")
+            speak("Como se encuentra usted el dia de hoy?")
+
+            query = TakeCommand().lower()
+
+            if 'bien' in query or "excelente" in query: 
+                speak("Es bueno saber que te sientes bien")
+            else:
+                speak("Espero te sientas mejor pronto")
